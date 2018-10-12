@@ -32,7 +32,7 @@ public class GreetingControllerTest {
     /* GET */
     @Test
     public void getPhone() {
-        int id = 2;
+        int id = 3;
         System.out.println("Testing getPhone API");
         RestTemplate restTemplate = new RestTemplate();
 
