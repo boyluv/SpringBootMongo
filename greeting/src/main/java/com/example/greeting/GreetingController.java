@@ -87,10 +87,11 @@ public class GreetingController {
 //        // New version
         System.out.println("Create new phone");
 
-        if(repository.findById(phone.id).isPresent()){
-            return new ResponseEntity<>(new CustomErrorType("Phone name : " +phone.getName() + " already exist "),HttpStatus.CONFLICT);
-        }
-
+//        if(repository.findById(phone.id).isPresent()){
+//            return new ResponseEntity<>(new CustomErrorType("Phone name : " +phone.getName() + " already exist "),HttpStatus.CONFLICT);
+//        }
+//
+        phone.id = counter.incrementAndGet();
         repository.save(phone);
 
         HttpHeaders headers = new HttpHeaders();
@@ -105,20 +106,38 @@ public class GreetingController {
     // Update Phone
     @RequestMapping(value = "/phones/{id}",method = RequestMethod.PUT)
     public ResponseEntity<?> updatePhones(@PathVariable("id") long id,@RequestBody Phone phone){
+
+        // Old version
+//        System.out.println("Update phone with id");
+//
+//        Phone curPhone = phoneService.findById(id);
+//        if(curPhone == null){
+//            return new ResponseEntity<>(new CustomErrorType("Can not find phone with id " + id),HttpStatus.NOT_FOUND);
+//        }
+//
+//
+//        curPhone.setName(phone.getName());
+//        curPhone.setDetailPhone(phone.getDetailPhone().getColor(),phone.getDetailPhone().getOs());
+//
+//        phoneService.updatePhone(curPhone);
+//
+//        return new ResponseEntity<Phone>(curPhone,HttpStatus.OK);
+
+        // New version
         System.out.println("Update phone with id");
 
-        Phone curPhone = phoneService.findById(id);
-        if(curPhone == null){
+        if(!repository.findById(phone.id).isPresent()){
             return new ResponseEntity<>(new CustomErrorType("Can not find phone with id " + id),HttpStatus.NOT_FOUND);
         }
 
-
+        Phone curPhone = repository.findById(phone.id).get();
         curPhone.setName(phone.getName());
         curPhone.setDetailPhone(phone.getDetailPhone().getColor(),phone.getDetailPhone().getOs());
 
-        phoneService.updatePhone(curPhone);
+        repository.save(curPhone);
 
         return new ResponseEntity<Phone>(curPhone,HttpStatus.OK);
+
     }
     // Delete Phone
     @RequestMapping(value = "/phones/{id}",method = RequestMethod.DELETE)
